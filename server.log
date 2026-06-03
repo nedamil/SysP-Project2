@@ -1,0 +1,50 @@
+[2026-06-03 22:56:41] [INFO] === Palindrome Word Server v2 (Tasks) ===
+[2026-06-03 22:56:41] [INFO] Root folder: N:\rii\6. semestar\sistemsko programiranje\projekat2\bin\Debug\net9.0\files
+[2026-06-03 22:56:41] [INFO] Worker-1 pokrenut
+[2026-06-03 22:56:41] [INFO] Worker-2 pokrenut
+[2026-06-03 22:56:41] [INFO] Worker-3 pokrenut
+[2026-06-03 22:56:41] [INFO] Worker-4 pokrenut
+[2026-06-03 22:56:41] [INFO] HTTP Server pokrenut na http://localhost:5050/
+[2026-06-03 22:56:41] [INFO] Server radi. Pritisni Enter za zaustavljanje...
+[2026-06-03 22:56:45] [INFO] Primljen zahtev: http://localhost:5050/
+[2026-06-03 22:56:45] [INFO] Zahtev dodat u queue. Trenutno: 1
+[2026-06-03 22:56:45] [INFO] Worker-1 preuzeo zahtev
+[2026-06-03 22:56:45] [INFO] Odgovor poslan: 400 - Naziv fajla nije naveden. Primer: http://localhost:5050/fajl.txt
+[2026-06-03 22:56:45] [INFO] Worker-1 završio obradu
+[2026-06-03 22:56:48] [INFO] Primljen zahtev: http://localhost:5050/
+[2026-06-03 22:56:48] [INFO] Zahtev dodat u queue. Trenutno: 1
+[2026-06-03 22:56:48] [INFO] Worker-3 preuzeo zahtev
+[2026-06-03 22:56:48] [INFO] Odgovor poslan: 400 - Naziv fajla nije naveden. Primer: http://localhost:5050/fajl.txt
+[2026-06-03 22:56:48] [INFO] Worker-3 završio obradu
+[2026-06-03 22:57:05] [INFO] Primljen zahtev: http://localhost:5050/fajl.txt
+[2026-06-03 22:57:05] [INFO] Zahtev dodat u queue. Trenutno: 1
+[2026-06-03 22:57:05] [INFO] Worker-2 preuzeo zahtev
+[2026-06-03 22:57:05] [INFO] Obrada zahteva za fajl: 'fajl.txt'
+[2026-06-03 22:57:05] [INFO] Cache greska za 'fajl.txt', placeholder uklonjen
+[2026-06-03 22:57:05] [INFO] Odgovor poslan: 404 - Fajl 'fajl.txt' nije pronađen.
+[2026-06-03 22:57:05] [INFO] Worker-2 završio obradu
+[2026-06-03 22:57:30] [INFO] Primljen zahtev: http://localhost:5050/fajl.txt
+[2026-06-03 22:57:30] [INFO] Zahtev dodat u queue. Trenutno: 1
+[2026-06-03 22:57:30] [INFO] Worker-4 preuzeo zahtev
+[2026-06-03 22:57:30] [INFO] Obrada zahteva za fajl: 'fajl.txt'
+[2026-06-03 22:57:30] [INFO] Palindrom pronađen: 'ana'
+[2026-06-03 22:57:30] [INFO] Palindrom pronađen: 'radar'
+[2026-06-03 22:57:30] [INFO] Palindrom pronađen: 'oko'
+[2026-06-03 22:57:30] [INFO] Cache upisan za 'fajl.txt': 3 palindroma
+[2026-06-03 22:57:30] [INFO] Odgovor poslan: 200 - Broj palindroma: 3
+[2026-06-03 22:57:30] [INFO] Worker-4 završio obradu
+[2026-06-03 22:57:31] [INFO] Primljen zahtev: http://localhost:5050/fajl.txt
+[2026-06-03 22:57:31] [INFO] Zahtev dodat u queue. Trenutno: 1
+[2026-06-03 22:57:31] [INFO] Worker-1 preuzeo zahtev
+[2026-06-03 22:57:31] [INFO] Obrada zahteva za fajl: 'fajl.txt'
+[2026-06-03 22:57:31] [INFO] Cache hit za 'fajl.txt'
+[2026-06-03 22:57:31] [INFO] Odgovor poslan: 200 - Broj palindroma (iz cache-a): 3
+[2026-06-03 22:57:31] [INFO] Worker-1 završio obradu
+[2026-06-03 22:57:31] [INFO] Primljen zahtev: http://localhost:5050/fajl.txt
+[2026-06-03 22:57:31] [INFO] Zahtev dodat u queue. Trenutno: 1
+[2026-06-03 22:57:31] [INFO] Worker-3 preuzeo zahtev
+[2026-06-03 22:57:31] [INFO] Obrada zahteva za fajl: 'fajl.txt'
+[2026-06-03 22:57:31] [INFO] Cache hit za 'fajl.txt'
+[2026-06-03 22:57:31] [INFO] Odgovor poslan: 200 - Broj palindroma (iz cache-a): 3
+[2026-06-03 22:57:31] [INFO] Worker-3 završio obradu
+[2026-06-03 22:57:40] [INFO] Server zaustavljen.
