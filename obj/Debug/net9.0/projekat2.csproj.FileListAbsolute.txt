@@ -12,3 +12,4 @@ N:\rii\6. semestar\sistemsko programiranje\projekat2\obj\Debug\net9.0\refint\pro
 N:\rii\6. semestar\sistemsko programiranje\projekat2\obj\Debug\net9.0\projekat2.pdb
 N:\rii\6. semestar\sistemsko programiranje\projekat2\obj\Debug\net9.0\projekat2.genruntimeconfig.cache
 N:\rii\6. semestar\sistemsko programiranje\projekat2\obj\Debug\net9.0\ref\projekat2.dll
+N:\rii\6. semestar\sistemsko programiranje\projekat2\obj\Debug\net9.0\projekat2.sourcelink.json
