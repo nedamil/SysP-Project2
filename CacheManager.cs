@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
-using System.Threading;
+using System.Threading.Tasks;
 
 public class CacheManager
 {
-    private readonly Dictionary<string, CacheEntry> _cache 
+    private readonly Dictionary<string, CacheEntry> _cache
         = new Dictionary<string, CacheEntry>();
-    private readonly Dictionary<string, object> _keyLocks 
+    private readonly Dictionary<string, object> _keyLocks
         = new Dictionary<string, object>();
     private readonly object _globalLock = new object();
     private readonly TimeSpan _ttl;
@@ -29,42 +29,41 @@ public class CacheManager
         }
     }
 
-    public bool TryGet(string key, out int result)
+    public (bool shouldProcess, Task<int>? waitTask) TryGet(string key)
     {
         object keyLock = GetKeyLock(key);
 
         lock (keyLock)
         {
-            while (true)
+            if (_cache.TryGetValue(key, out CacheEntry? entry))
             {
-                if (_cache.TryGetValue(key, out CacheEntry? entry))
+                // Nije spreman - vrati Task za async cekanje
+                // umesto Monitor.Wait
+                if (!entry.IsReady)
                 {
-                    if (!entry.IsReady)
-                    {
-                        Logger.LogInfo($"Nit ceka na rezultat za '{key}'");
-                        Monitor.Wait(keyLock);
-                        continue;
-                    }
-
-                    if (DateTime.Now - entry.CreatedAt > _ttl)
-                    {
-                        Logger.LogInfo($"Cache istekao za '{key}', brisemo");
-                        _cache.Remove(key);
-                        _cache[key] = new CacheEntry { IsReady = false };
-                        result = 0;
-                        return false;
-                    }
-
-                    Logger.LogInfo($"Cache hit za '{key}'");
-                    result = entry.PalindromeCount;
-                    return true;
+                    Logger.LogInfo($"Task ceka na rezultat za '{key}'");
+                    return (false, entry.Tcs.Task);
                 }
-                else
+
+                // TTL istekao
+                if (DateTime.Now - entry.CreatedAt > _ttl)
                 {
-                    _cache[key] = new CacheEntry { IsReady = false };
-                    result = 0;
-                    return false;
+                    Logger.LogInfo($"Cache istekao za '{key}', brisemo");
+                    var newEntry = new CacheEntry { IsReady = false };
+                    _cache[key] = newEntry;
+                    return (true, null);
                 }
+
+                // Cache hit
+                Logger.LogInfo($"Cache hit za '{key}'");
+                return (false, Task.FromResult(entry.PalindromeCount));
+            }
+            else
+            {
+                // Cache miss - ova nit obradjuje
+                var newEntry = new CacheEntry { IsReady = false };
+                _cache[key] = newEntry;
+                return (true, null);
             }
         }
     }
@@ -75,13 +74,14 @@ public class CacheManager
 
         lock (keyLock)
         {
-            _cache[key] = new CacheEntry
+            if (_cache.TryGetValue(key, out CacheEntry? entry))
             {
-                PalindromeCount = result,
-                CreatedAt = DateTime.Now,
-                IsReady = true
-            };
-            Monitor.PulseAll(keyLock);
+                entry.PalindromeCount = result;
+                entry.CreatedAt = DateTime.Now;
+                entry.IsReady = true;
+                // Kompletira Task - probudi sve taskove koji cekaju
+                entry.Tcs.TrySetResult(result);
+            }
             Logger.LogInfo($"Cache upisan za '{key}': {result} palindroma");
         }
     }
@@ -92,8 +92,14 @@ public class CacheManager
 
         lock (keyLock)
         {
-            _cache.Remove(key);
-            Monitor.PulseAll(keyLock);
+            if (_cache.TryGetValue(key, out CacheEntry? entry))
+            {
+                // Obavesti cekajuce taskove da je doslo do greske
+                entry.Tcs.TrySetException(
+                    new Exception($"Obrada nije uspela za '{key}'"));
+                _cache.Remove(key);
+                _keyLocks.Remove(key);
+            }
             Logger.LogInfo($"Cache greska za '{key}', placeholder uklonjen");
         }
     }

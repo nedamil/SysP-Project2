@@ -1,3 +1,4 @@
+using System;
 using System.Net;
 using System.Threading;
 
@@ -31,9 +32,20 @@ public class WorkerPool
     {
         while (true)
         {
-            var context = _queue.Dequeue();
-            Logger.LogInfo($"Worker-{workerId} preuzeo zahtev");
-            _handler.Handle(context); // ← Handle, ne HandleAsync
+            // Klasicna nit - blokirajuce cekanje na queue
+            HttpListenerContext context = _queue.Dequeue();
+            Logger.LogInfo($"Worker-{workerId} preuzeo zahtev, pokrecemo task");
+
+            // Pokreni task - ne cekaj, worker odmah ide po sledeci zahtev
+            _handler.HandleAsync(context)
+                .ContinueWith(t =>
+                {
+                    if (t.IsFaulted)
+                        Logger.LogError(
+                            $"Worker-{workerId} task greska: {t.Exception?.Message}");
+                    else
+                        Logger.LogInfo($"Worker-{workerId} task završen");
+                });
         }
     }
 }
